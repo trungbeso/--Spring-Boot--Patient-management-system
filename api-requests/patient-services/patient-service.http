@@ -1,0 +1,17 @@
+### GET request to get all patients
+GET http://localhost:4000/api/v1/patients
+###
+
+### POST request to create a new patient
+POST http://localhost:4000/api/v1/patients/create
+Content-Type: application/json
+
+{
+  "name": "Maria Jollier",
+  "email": "sample@gmail.com",
+  "address": "123 hallway",
+  "dateOfBirth": "1990-09-09",
+  "registeredDate": "2025-09-09"
+}
+
+###

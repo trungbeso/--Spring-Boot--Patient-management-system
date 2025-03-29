@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+**/.idea/*
 *.iws
 *.iml
 *.ipr
@@ -30,4 +30,10 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+**/.vscode/*
+
+**/.DS-Store
+**/node_module/*
+**/dist/*
+**/*.env
+!**/example.env
