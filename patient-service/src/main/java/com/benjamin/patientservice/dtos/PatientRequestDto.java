@@ -1,5 +1,6 @@
 package com.benjamin.patientservice.dtos;
 
+import com.benjamin.patientservice.dtos.validators.CreatePatientValidationGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,8 @@ public class PatientRequestDto {
 	@NotBlank(message = "Date of birth is required")
 	private String dateOfBirth;
 
-	@NotBlank(message = "Register date is required")
+	@NotBlank(groups = CreatePatientValidationGroup.class,
+	message = "Registered date is required")
 	private String registeredDate;
 
 	public @NotBlank(message = "Name is required") @Size(max = 100, message = "Name cannot exceed 100 characters") String getName() {
@@ -54,7 +56,7 @@ public class PatientRequestDto {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public @NotBlank(message = "Register date is required") String getRegisteredDate() {
+	public String getRegisteredDate() {
 		return registeredDate;
 	}
 
