@@ -15,4 +15,6 @@ public interface IPatientService {
 	PatientResponseDto createPatient(PatientRequestDto patientRequestDto);
 
 	PatientResponseDto updatePatient(UUID id, PatientRequestDto req);
+
+	void deletePatient(UUID id);
 }
