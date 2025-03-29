@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MaterialThemeProjectNewConfig">
     <option name="metadata">
       <MTProjectMetadataState>
@@ -7,6 +8,13 @@
         <option name="pristineConfig" value="false" />
         <option name="userId" value="7587c137:19174235639:-7ffe" />
       </MTProjectMetadataState>
+    </option>
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/patient-service/pom.xml" />
+      </list>
     </option>
   </component>
   <component name="ProjectRootManager">
