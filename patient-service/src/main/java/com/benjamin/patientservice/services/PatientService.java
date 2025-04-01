@@ -4,6 +4,7 @@ import com.benjamin.patientservice.dtos.PatientRequestDto;
 import com.benjamin.patientservice.dtos.PatientResponseDto;
 import com.benjamin.patientservice.exception.EmailAlreadyExistsException;
 import com.benjamin.patientservice.exception.PatientNotFoundException;
+import com.benjamin.patientservice.grpc.BillingServiceGrpcClient;
 import com.benjamin.patientservice.mapper.PatientMapper;
 import com.benjamin.patientservice.models.Patient;
 import com.benjamin.patientservice.repositories.IPatientRepository;
@@ -17,10 +18,12 @@ import java.util.UUID;
 public class PatientService implements IPatientService {
 
 	private final IPatientRepository patientRepository;
+	private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-	public PatientService(IPatientRepository patientRepository) {
+	public PatientService(IPatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient) {
 		this.patientRepository = patientRepository;
-	}
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
+    }
 
 	@Override
 	public List<PatientResponseDto> getPatients() {
@@ -54,7 +57,12 @@ public class PatientService implements IPatientService {
 		patient.setEmail(req.getEmail());
 		patient.setDateOfBirth(LocalDate.parse(req.getDateOfBirth()));
 		patient = patientRepository.save(patient);
-		return PatientMapper.toDto(patient);
+
+		Patient newPatient = patientRepository.save(PatientMapper.toEntity(req));
+
+		billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),newPatient.getEmail());
+
+		return PatientMapper.toDto(newPatient);
 	}
 
 	@Override
