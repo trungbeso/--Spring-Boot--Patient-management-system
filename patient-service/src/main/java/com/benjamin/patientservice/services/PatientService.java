@@ -5,6 +5,7 @@ import com.benjamin.patientservice.dtos.PatientResponseDto;
 import com.benjamin.patientservice.exception.EmailAlreadyExistsException;
 import com.benjamin.patientservice.exception.PatientNotFoundException;
 import com.benjamin.patientservice.grpc.BillingServiceGrpcClient;
+import com.benjamin.patientservice.kafka.KafkaProducer;
 import com.benjamin.patientservice.mapper.PatientMapper;
 import com.benjamin.patientservice.models.Patient;
 import com.benjamin.patientservice.repositories.IPatientRepository;
@@ -19,11 +20,13 @@ public class PatientService implements IPatientService {
 
 	private final IPatientRepository patientRepository;
 	private final BillingServiceGrpcClient billingServiceGrpcClient;
+	private final KafkaProducer kafkaProducer;
 
-	public PatientService(IPatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient) {
+	public PatientService(IPatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient, KafkaProducer kafkaProducer) {
 		this.patientRepository = patientRepository;
         this.billingServiceGrpcClient = billingServiceGrpcClient;
-    }
+		this.kafkaProducer = kafkaProducer;
+	}
 
 	@Override
 	public List<PatientResponseDto> getPatients() {
@@ -40,8 +43,12 @@ public class PatientService implements IPatientService {
 			throw new EmailAlreadyExistsException("A patient with this email already exists" + patientRequestDto.getEmail());
 		}
 
-		Patient patient = patientRepository.save(PatientMapper.toEntity(patientRequestDto));
-		return PatientMapper.toDto(patient);
+		Patient newPatient = patientRepository.save(PatientMapper.toEntity(patientRequestDto));
+		billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),newPatient.getEmail());
+
+		kafkaProducer.sendEvent(newPatient);
+
+		return PatientMapper.toDto(newPatient);
 	}
 
 	@Override
@@ -58,11 +65,7 @@ public class PatientService implements IPatientService {
 		patient.setDateOfBirth(LocalDate.parse(req.getDateOfBirth()));
 		patient = patientRepository.save(patient);
 
-		Patient newPatient = patientRepository.save(PatientMapper.toEntity(req));
-
-		billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),newPatient.getEmail());
-
-		return PatientMapper.toDto(newPatient);
+		return PatientMapper.toDto(patient);
 	}
 
 	@Override

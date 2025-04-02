@@ -14,10 +14,13 @@ HELP.md
 .sts4-cache
 
 ### IntelliJ IDEA ###
-*/.idea/**
-*.iws
-*.iml
-*.ipr
+.idea/*
+!.idea/runConfigurations/
+.idea/modules/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/uiDesigner.xml
+.idea/shelf/
 
 ### NetBeans ###
 /nbproject/private/
@@ -30,10 +33,4 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-*/.vscode/**
-
-**/.DS-Store
-**/node_module/*
-**/dist/*
-**/*.env
-!**/example.env
+.vscode/
