@@ -6,4 +6,11 @@ Content-Type: application/json
   "email": "testuser@test.com",
   "password": "password123"
 }
+
+> {% client.global.set("token", response.body.token) %}
+###
+
+### GET request to validate token
+GET http://localhost:4005/api/v1/users/validate
+Authorization: Bearer {{token}}
 ###
