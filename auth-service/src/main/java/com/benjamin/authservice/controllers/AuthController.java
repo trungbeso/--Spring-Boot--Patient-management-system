@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/auths")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {

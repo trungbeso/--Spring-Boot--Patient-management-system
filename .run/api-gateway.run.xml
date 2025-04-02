@@ -4,6 +4,14 @@
       <settings>
         <option name="imageTag" value="api-gateway:latest" />
         <option name="containerName" value="api-gateway" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="AUTH_SERVICE_URL" />
+              <option name="value" value="http://auth-service:4005" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
         <option name="portBindings">
           <list>
             <DockerPortBindingImpl>
