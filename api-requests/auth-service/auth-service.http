@@ -1,5 +1,5 @@
 ### POST request for login
-POST http://localhost:4005/api/v1/users/login
+POST http://localhost:4004/api/v1/auths/login
 Content-Type: application/json
 
 {
