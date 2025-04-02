@@ -2,6 +2,10 @@
 GET http://localhost:4000/api/v1/patients
 ###
 
+### GET all patient by api gate-way
+GET http://localhost:4004/api/v1/patients
+###
+
 ### POST request to create a new patient
 POST http://localhost:4000/api/v1/patients/create
 Content-Type: application/json
