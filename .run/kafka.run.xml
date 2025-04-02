@@ -1,0 +1,56 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="kafka" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="imageTag" value="bitnami/kafka:latest" />
+        <option name="containerName" value="kafka" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_ADVERTISED_LISTENERS" />
+              <option name="value" value="PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_CONTROLLER_LISTENER_NAMES" />
+              <option name="value" value="CONTROLLER" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_CONTROLLER_QUORUM_VOTERS" />
+              <option name="value" value="0@kafka:9093" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP" />
+              <option name="value" value="CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_LISTENERS" />
+              <option name="value" value="PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_NODE_ID" />
+              <option name="value" value="0" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="KAFKA_CFG_PROCESS_ROLES" />
+              <option name="value" value="controller,broker" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="9092" />
+              <option name="hostPort" value="9092" />
+            </DockerPortBindingImpl>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="9094" />
+              <option name="hostPort" value="9094" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="commandLineOptions" value="--network internal" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
