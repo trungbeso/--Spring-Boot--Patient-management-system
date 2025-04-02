@@ -7,9 +7,9 @@ POST http://localhost:4000/api/v1/patients/create
 Content-Type: application/json
 
 {
-  "name": "jack Sparrow with billing account",
-  "email": "sparrow555@gmail.com",
-  "address": "115 hallway",
+  "name": "jack Sparrow with kafka account",
+  "email": "sparrow666@gmail.com",
+  "address": "caribbean",
   "dateOfBirth": "1990-09-09",
   "registeredDate": "2025-01-04"
 }
