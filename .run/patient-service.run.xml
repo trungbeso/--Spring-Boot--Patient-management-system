@@ -7,6 +7,14 @@
         <option name="envVars">
           <list>
             <DockerEnvVarImpl>
+              <option name="name" value="BILLING_SERVICE_ADDRESS" />
+              <option name="value" value="billing-service" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="BILLING_SERVICE_GRPC_PORT" />
+              <option name="value" value="9001" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
               <option name="name" value="SPRING_DATASOURCE_PASSWORD" />
               <option name="value" value="password" />
             </DockerEnvVarImpl>
@@ -27,12 +35,8 @@
               <option name="value" value="always" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
-              <option name="name" value="BILLING_SERVICE_ADDRESS" />
-              <option name="value" value="billing-service" />
-            </DockerEnvVarImpl>
-            <DockerEnvVarImpl>
-              <option name="name" value="BILLING_SERVICE_GRPC_PORT" />
-              <option name="value" value="9001" />
+              <option name="name" value="SPRING_KAFKA_BOOTSTRAP_SERVERS" />
+              <option name="value" value="kafka:9092" />
             </DockerEnvVarImpl>
           </list>
         </option>
