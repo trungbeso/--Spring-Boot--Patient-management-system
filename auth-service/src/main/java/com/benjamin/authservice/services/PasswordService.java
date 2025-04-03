@@ -33,6 +33,22 @@ public class PasswordService {
 	@Value("${jwt.secret}")
 	private String secretKey;
 
+	public String hashPassword(String rawPassword) {
+		return passwordEncoder.encode(rawPassword);
+	}
+
+	public String getEmailFromPasswordResetToken(String token) {
+		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+
+		Claims claims = Jwts.parser()
+			  .verifyWith(key)
+			  .build()
+			  .parseSignedClaims(token)
+			  .getPayload();
+
+		return claims.getSubject();
+	}
+
 	public String generatePasswordResetToken(String email) {
 		String jsonTokenId = UUID.randomUUID().toString();
 		LocalDateTime expireAt = LocalDateTime.now().plusMinutes(5);
