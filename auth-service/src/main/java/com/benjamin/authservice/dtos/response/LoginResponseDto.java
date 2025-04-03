@@ -1,4 +1,4 @@
-package com.benjamin.authservice.dtos;
+package com.benjamin.authservice.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
