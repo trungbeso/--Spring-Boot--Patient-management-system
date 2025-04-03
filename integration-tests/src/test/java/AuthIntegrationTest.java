@@ -21,7 +21,7 @@ public class AuthIntegrationTest {
 
 		String loginPayload = """
 					{
-								"email": "test@test.com",
+								"email": "testuser@test.com",
 								"password": "password123"
 					}
 					""";
