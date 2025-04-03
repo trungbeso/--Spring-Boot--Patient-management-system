@@ -15,6 +15,14 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
+	@ExceptionHandler(SamePasswordException.class)
+	public ResponseEntity<Map<String, String>> handlePassword(SamePasswordException ex) {
+		Map<String, String> errors = new HashMap<>();
+		errors.put("message", "New Password must different from old password");
+		errors.put("error", ex.getMessage());
+		return ResponseEntity.badRequest().body(errors);
+	}
+
 	@ExceptionHandler(TokenExpirationException.class)
 	public ResponseEntity<Map<String, String>> handleTokenExpirationException(TokenExpirationException ex) {
 		Map<String, String> errors = new HashMap<>();

@@ -1,7 +1,10 @@
 package com.benjamin.authservice.services;
 
+import com.benjamin.authservice.dtos.request.ChangePasswordRequest;
+import com.benjamin.authservice.dtos.request.PasswordResetRequest;
 import com.benjamin.authservice.dtos.request.RegisterRequest;
 import com.benjamin.authservice.enums.Role;
+import com.benjamin.authservice.exceptions.SamePasswordException;
 import com.benjamin.authservice.models.Uzer;
 import com.benjamin.authservice.repositories.UserRepository;
 import com.benjamin.authservice.utils.JwtUtil;
@@ -23,6 +26,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final PasswordService passwordService;
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Uzer user = userRepository.findByEmail(email);
@@ -58,5 +62,33 @@ public class AuthService {
         userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("Register failed"));
 
         return user.getId();
+    }
+
+    public boolean handleResetPassword(PasswordResetRequest request) {
+        Uzer user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            throw new UsernameNotFoundException("Email not register yet" + request.getEmail());
+        }
+
+        String token = passwordService.generatePasswordResetToken(request.getEmail());
+
+        //TODO: send to user email
+        return true;
+    }
+
+    public boolean changePassword(ChangePasswordRequest request) {
+        String email = passwordService.getEmailFromPasswordResetToken(request.getToken());
+        Uzer user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Email not register yet" + email);
+        }
+        if (user.getPassword().equals(request.getPassword())) {
+            throw new SamePasswordException("Passwords do not match");
+        }
+        user.setPassword(passwordService.hashPassword(request.getPassword()));
+        user = userRepository.save(user);
+
+        //TODO: send email
+        return true;
     }
 }
