@@ -1,0 +1,125 @@
+version: "3.8"
+
+services:
+
+  patient-service-db:
+    image: postgres:latest
+    container_name: patient-service-db
+    ports:
+      - 5000:5432
+    networks:
+      - app-network
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=db
+
+  identity-db:
+    image: postgres:latest
+    container_name: identity-db
+    ports:
+      - 5001:5432
+    networks:
+      - app-network
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=db
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092
+      - 9094:9094
+    environment:
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+    networks:
+      - app-network
+
+  patient-service:
+    image: 5e42731c21ea
+    container_name: patient-service
+    ports:
+      - 4000:4000
+    env_file:
+      - .env
+    environment:
+      - BILLING_SERVICE_ADDRESS=billing-service
+      - BILLING_SERVICE_GRPC_PORT=9001
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://patient-service-db:5432/db
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - app-network
+    depends_on:
+      - patient-service-db
+
+  api-gateway:
+    image: 209edb0d0260
+    container_name: api-gateway
+    ports:
+      - 4004:4004
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:4005
+    networks:
+      - app-network
+
+  billing-service:
+    image: 0c9035e4749f
+    container_name: billing-service
+    ports:
+      - 4001:4001
+      - 9001:9001
+    networks:
+      - app-network
+
+  analytics-service:
+    image: 4e2ecca13824
+    container_name: analytics-service
+    ports:
+      - 4002:4002
+    networks:
+      - app-network
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  auth-service:
+    image: 6d984b16101e
+    container_name: auth-service
+    ports:
+      - 4005:4005
+    networks:
+      - app-network
+    env_file:
+      - .env
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://identity-db:5432/db
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+    depends_on:
+      - identity-db
+
+networks:
+  app-network:
+    driver: bridge
+    internal: true
+
+volumes:
+  db_data:

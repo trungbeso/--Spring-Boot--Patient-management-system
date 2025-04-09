@@ -1,0 +1,3 @@
+lb-866a66ce.elb.localhost.localstack.cloud
+
+./localstack-deploy.sh
